@@ -1,0 +1,19 @@
+export const Notes_LOGIN_SUCCESS = 'NOTES_LOGIN_SUCCESS'
+export const Notes_LOGIN_REQUEST = 'NOTES _LOGIN_REQUEST'
+export const Notes_LOGIN_FAIL = ' NOTES_LOGIN_FAIL'
+
+export const  Note_CREATE_SUCCESS = 'NOTES_CREATE_SUCCESS'
+export const Note_CREATE_REQUEST = 'NOTES _CREATE_REQUEST'
+export const Note_CREATE_FAIL = ' NOTES_CREATE_FAIL'
+
+
+export const  Note_UPDATE_SUCCESS = 'NOTES_UPDATES_SUCCESS'
+export const Note_UPDATE_REQUEST = 'NOTES _UPDATES_REQUEST'
+export const Note_UPDATE_FAIL = ' NOTES_UPDATES_FAIL'
+
+
+export const  Note_DELETE_SUCCESS = 'NOTES_DELETE_SUCCESS'
+export const Note_DELETE_REQUEST = 'NOTES _DELETE_REQUEST'
+export const Note_DELETE_FAIL = ' NOTES_DELETE_FAIL'
+
+

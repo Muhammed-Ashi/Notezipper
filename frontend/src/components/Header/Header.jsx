@@ -1,7 +1,18 @@
 import React from 'react'
 import {Nav,NavDropdown , Navbar , Form , Container , Button , }  from 'react-bootstrap' 
-import { Link } from 'react-router-dom';
-function Header() {
+import { useDispatch,useSelector } from 'react-redux';
+import { Link ,useNavigate  } from 'react-router-dom';
+import { logout } from '../../actions/userActions';
+function Header({setsearch}) {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const userLogin = useSelector((state)=> state.userLogin)
+  const {userinfo} = userLogin
+  const logoutHandler = () => {
+              dispatch(logout())
+              navigate('/')
+  }
   return (
  
     <Navbar bg="primary" expand="lg"  >
@@ -16,6 +27,7 @@ function Header() {
             placeholder="Search"
             className="me-2"
             aria-label="Search"
+            onChange={(e)=> setsearch(e.target.value)}
           />
           <Button variant="outline-success">Search</Button>
         </Form>
@@ -27,15 +39,19 @@ function Header() {
         >
           
          
-          <NavDropdown title="My Profile" id="navbarScrollingDropdown" >
-            
-          <NavDropdown.Item href="#action3" className='h-10'>My Profile</NavDropdown.Item>
+          <NavDropdown title="My Profile" id="navbarScrollingDropdown"
+           style={{alignItems:'center',}}>
+          <NavDropdown.Item  >
+          <Nav.Link as={Link} to='/profile'>profile</Nav.Link>
+
+          </NavDropdown.Item>
+
           
-            <NavDropdown.Item href="#action3" className='h-10'>Logout</NavDropdown.Item>
+            <NavDropdown.Item style={{marginLeft:"5px"}}  onClick={logoutHandler} className='h-10'>Logout</NavDropdown.Item>
           
            
           </NavDropdown>
-          <Nav.Link href="/mynote" >
+          <Nav.Link href="mynote" >
             <Link to={'mynote'} > My Notes</Link></Nav.Link>
         
          

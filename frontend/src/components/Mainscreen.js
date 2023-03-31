@@ -2,6 +2,7 @@ import React from 'react'
 import {Container,Row} from 'react-bootstrap'
 import './mainScreen.css'
 function Mainscreen({title,children}) {
+  console.log(children,"njan")
   return (
     <div className='mainBack'>
         <Container>

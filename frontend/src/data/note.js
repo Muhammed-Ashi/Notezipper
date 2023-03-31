@@ -1,4 +1,4 @@
-var notes=[
+var noter=[
     {
          id:1,
     title:" day of callege",
@@ -21,4 +21,4 @@ var notes=[
 
 
 
-module.exports=notes
+module.exports=noter
