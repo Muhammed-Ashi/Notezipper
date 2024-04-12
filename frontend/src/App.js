@@ -24,7 +24,7 @@ function App() {
        <Route path='/register' element={<RegisterScreen/>}/>
        <Route path='/create' element={<Createnote/>}/> 
        <Route path='/mynote' element={<MyNotes search={search}/>}/>
-       <Route path='/note/:id' element={<SingleNote/>}/>
+       <Route path='/:noteId' element={<SingleNote/>}/>
        <Route path='/profile' element={<ProfileScreen/>}/>
        </Routes>
         <Footer />

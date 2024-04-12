@@ -13,9 +13,11 @@ const protect = asyncHandler (async (req,res,next) => {
     ) {
         try {
             token = req.headers.authorization.split(" ")[1]
-
+                   console.log(token,"token form jwt ")
              //decodes token id     
              const decoded = jwt.verify(token,process.env.jwt_Secret)
+             console.log(decoded,"deco")
+             
              console.log(decoded,"deco")
              
               req.user = await user.findById(decoded.id).select("-password")
@@ -23,6 +25,7 @@ const protect = asyncHandler (async (req,res,next) => {
                 next()
         } catch (error) {
              res.status(401)
+             console.log(error,"from jwt")
              throw new Error("Not autorized , token failed")
         }
     }

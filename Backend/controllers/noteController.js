@@ -3,14 +3,14 @@ const asyncHandler = require("express-async-handler")
 const { ObjectId } = require('mongodb');
 
 const getNotes = asyncHandler(async(req,res) => {
-    console.log("iam working,note api")
+  
      const note = await Note.find()
-     console.log(note,'notelist from database')
+        
      res.json(note)
 })
  
 const createNote = asyncHandler(async (req,res) => {
-    console.log("from server")
+    console.log("from server createnote")
      const { title,content,category} = req.body
      if (!title || !content || !category ) {
         res.status(400)
@@ -21,14 +21,16 @@ const createNote = asyncHandler(async (req,res) => {
             if (err){
                 console.log(err,"error from mongoose note creation")
             }
-        })
+        }) 
         console.log(note,"checking not posting")
         
      }
 })
 
 const getNoteByid = asyncHandler (async (req,res,next) => {
-    const note = await Note.findById(req.params.id)
+  console.log("are you there")
+    const note = await Note.find({user:ObjectId(req.params.id)})
+    console.log(req.params.id,"just for ra")
   
     if (note) {
         res.json(note)
@@ -39,9 +41,9 @@ const getNoteByid = asyncHandler (async (req,res,next) => {
 
 const UpdateNote = asyncHandler(async (req, res) => {
     const { title, content, category } = req.body;
-  console.log(req.user,"id coming from core")
-    const note = await Note.findById(req.params.id);
-  
+  console.log(req.params.noteId,"id coming from core")
+    const note = await Note.findById(req.params.noteId);
+           console.log(note,"notecontroller")
     if (note.user.toString() !== req.user.id.toString()) {
       res.status(401);
       throw new Error("You can't perform this action");
@@ -54,14 +56,22 @@ const UpdateNote = asyncHandler(async (req, res) => {
   
       const updatedNote = await note.save();
       res.json(updatedNote);
+      console.log(updatedNote,"updatedNote")
     } else {
       res.status(404);
       throw new Error("Note not found");
     }
   });
  const DeleteNote = (async(req,res,next) => {
-  console.log('deleted')
+  console.log('deleted handler ')
+    try {
       const data = await Note.deleteOne({user:ObjectId(req.user.id),_id:ObjectId(req.params.id)})
-      console.log(data,"deleted")
+        console.log(data,'delete errro checking ')
+        res.json(data)
+    } catch (error) {
+       console.log(error, "error form delete hanadler  ") 
+    
+    }
+      
  })
 module.exports = {getNotes , createNote , getNoteByid,UpdateNote ,DeleteNote}

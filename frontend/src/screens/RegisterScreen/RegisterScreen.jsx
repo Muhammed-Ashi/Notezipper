@@ -6,7 +6,7 @@ import axios from 'axios'
 import Loading from '../../components/Loading'
 import { useDispatch,useSelector } from 'react-redux'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { register } from '../../actions/userActions'
+import { registerUser } from '../../actions/userAction'
 function RegisterScreen() {
       const [email, setEmail] = useState("")
    
@@ -22,12 +22,13 @@ function RegisterScreen() {
       const dispatch = useDispatch()
       const navigate = useNavigate()
       
-       const registerUser = useSelector((state) => state.registerUser)
-        const { loading , error , userinfo} = registerUser
+       const register = useSelector((state) => state.register)
+        const { loading , error , userinfo} = register
       
         useEffect(() => {
-         if (userinfo){
-          navigate('/mynote')
+         if (userinfo[0]){
+            navigate('/login')
+            
          }
         
         }, [userinfo])
@@ -35,10 +36,14 @@ function RegisterScreen() {
       const submitHandler =async (e) => {
    
         e.preventDefault()
-        if (password !== confirmPassword) {
+        if (password !== confirmPassword ) {
            setMessage('password do not match')
+        if (!picMessage){
+          setPicError('please select Image')
+        }
         }else  {
-          dispatch(register(name,email,password,picMessage))
+          dispatch(registerUser(name, picMessage, email, password))
+          console.log(password,"error checking for mail")
                   
         }
    console.log(picMessage,'Picmessage')
@@ -46,12 +51,13 @@ function RegisterScreen() {
       }
 
      const postDetails = (pics) => {
-      console.log(pics)
-           if (!pics) {
-            return setPicError('Please Select Image')
-           }
-           setPicError(null)
-             if (pics.type === 'image/jpeg ' || pics.type === "image/png") {
+      console.log(pics,"pics console")
+      if (!pics) {
+        return setPicError('image type doesnt support ')
+       }  else(
+        setPicError("")
+       )         
+      if (pics.type === 'image/jpeg ' || pics.type === "image/png") {
                   const data = new FormData()
                   data.append("file",pics)
                   data.append("upload_preset","Notezipper")
@@ -70,6 +76,7 @@ function RegisterScreen() {
                     })
                   .catch((err)=> {
                     console.log( err,"ndham")
+                  
                   })
              }else {
                return setPicError('Please Select Image')
@@ -77,6 +84,7 @@ function RegisterScreen() {
      }
   return (
      <Mainscreen title={'Register'}>
+      <div style={{ paddingLeft: '20px' ,paddingRight:'20px'}}> 
          <div className='loginContainer'>
           {error && <ErrorMessage variant='danger'>{error}</ErrorMessage>}
           {message && <ErrorMessage variant='danger'>{message}</ErrorMessage>}
@@ -115,7 +123,7 @@ function RegisterScreen() {
       </Form.Group>
       {picError && <ErrorMessage variant='danger'>{picError}</ErrorMessage>}
       <Form.Group controlId="formFile" className="mb-3">
-        <Form.Label>Default file input example</Form.Label>
+        <Form.Label>upload Image</Form.Label>
         <Form.Control type="file"  
             onChange={(e)=> {postDetails(e.target.files[0])}} />
       </Form.Group>
@@ -128,6 +136,7 @@ function RegisterScreen() {
       </Button>
     </Form>
 
+         </div>
          </div>
      </Mainscreen>
   )

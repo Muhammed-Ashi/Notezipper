@@ -6,10 +6,9 @@ import axios from 'axios'
 import Loading from '../../components/Loading';
 import ErrorMessage from '../../components/ErrorMessage';
 import{ useDispatch, useSelector } from 'react-redux'
-import { login } from '../../actions/userActions';
+import { userLogin } from '../../actions/userAction';
 import { useNavigate } from 'react-router-dom';
-
-
+import { errorCleanup } from '../../reducers/userSlice';
 
 
 function LoginScreen() {
@@ -20,17 +19,17 @@ function LoginScreen() {
    const dispatch =  useDispatch()
    const navigate = useNavigate()
         
- const userLogin = useSelector((state)=> state.userLogin)
-       
- const { 
-  loading , error , userinfo} = userLogin
-
+ const login = useSelector((state)=> state.login)
+   const {userinfo,loading,loginError} = login
+       console.log(loginError,"state")
 
   useEffect(() => {
-    if (userinfo){
-           navigate('/mynote')
+    if (userinfo[0]){
+          navigate('/mynote')
     }
-  
+    return () => {
+          dispatch(errorCleanup(""))
+    }
   
   }, [userinfo])
   
@@ -38,14 +37,14 @@ function LoginScreen() {
      const submitHandler = async(e) => {
       e.preventDefault()
          console.log(email,password)
-            dispatch(login(email,password))
+            dispatch(userLogin(email,password))
        
      }
   return (
      <Mainscreen title={'Login'}>
         <div className='loginContainer'>
           {loading && <Loading/>}
-          {error && <ErrorMessage >{error}</ErrorMessage>}
+          {loginError && <ErrorMessage >{loginError}</ErrorMessage>}
           <Form onSubmit={submitHandler}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>

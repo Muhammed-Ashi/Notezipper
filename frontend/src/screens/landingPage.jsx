@@ -4,18 +4,20 @@ import {Container,Row , Button} from 'react-bootstrap'
 import {Link, Navigate, useNavigate} from 'react-router-dom'
 import "./LoginScreen/LoginScreen.css"
 import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 function LandingPage({history}) {
    const navigate = useNavigate()
-  useEffect(() => {
-     const userInfo = localStorage.getItem("userInfo")
-    if (userInfo){
-      navigate('/mynote')
-    }else{
-      navigate("/")
-    }
-  
    
-  },[history] )
+   const userLogin = useSelector(state => state.login)
+  let { userinfo,success} = userLogin
+   
+  useEffect(() => {
+    if (userinfo.length ==0){
+       navigate('/')
+    }else {
+      navigate("/mynote")
+    }
+  },[] )
   
   return (
     <div className='main'>

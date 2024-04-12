@@ -6,7 +6,7 @@ import ErrorMessage from '../../components/ErrorMessage'
 import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useDispatch, useSelector } from 'react-redux'
-import { noteCreate, noteCreateAction, updateNoteAction } from '../../actions/noteAction'
+import { noteUpdateAction} from '../../actions/noteAction'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import store from '../../store'
@@ -18,31 +18,19 @@ function SingleNote({ match }) {
   const [date, setdate] = useState("")
 const [validationError, setvalidationError] = useState("")
 
-  const { id } = useParams()
+  const { noteId } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const noteUpdation = useSelector(state => state.noteUpdate)
-  const { error, loading, notes } = noteUpdation
+  const noteUpdates = useSelector(state => state.updatedNotes)
+  const {  updatedNote,error, loading } = noteUpdates
 
   useEffect(() => {
-    const fetching = async () => {
-      const { data } = await axios.get(`/api/notes/${id}`)
-        .catch((err) => console.log(err, "err from match by id"))
-      console.log(data, "data from match by id")
-       
-      setcategory(data.category)
-      settitle(data.title)
-      setcontent(data.content)
      
-      
-     
-
-    }
-    fetching()
+          
     return () => {
 
     }
-  }, [id])
+  }, [])
 
 
   const UpdateHandler = (e) => {
@@ -53,7 +41,9 @@ const [validationError, setvalidationError] = useState("")
     }
        else {
 
-    dispatch(updateNoteAction(title, category, content, id))
+    dispatch(noteUpdateAction(title, category, content,noteId   ))
+    console.log(noteId,'SE')
+    navigate('/mynote')
        }
      
   }
@@ -73,8 +63,8 @@ const [validationError, setvalidationError] = useState("")
         <Card.Body>
           <Form onSubmit={UpdateHandler} >
             <Form.Group className="mb-3" controlId="title">
-              {error  && <ErrorMessage variant="danger">{error}</ErrorMessage>}
-              {validationError  && <ErrorMessage variant="danger">{error}</ErrorMessage>}
+              {/* {error  && <ErrorMessage variant="danger">{error}</ErrorMessage>}
+              {validationError  && <ErrorMessage variant="danger">{error}</ErrorMessage>} */}
               <Form.Label>Title</Form.Label>
               <Form.Control type="text" placeholder="Enter the title"
                 value={title}

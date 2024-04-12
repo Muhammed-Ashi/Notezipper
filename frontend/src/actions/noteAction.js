@@ -1,155 +1,156 @@
-import {
-  Notes_LOGIN_FAIL, Notes_LOGIN_REQUEST, Notes_LOGIN_SUCCESS
-  , Note_CREATE_FAIL, Note_CREATE_REQUEST, Note_CREATE_SUCCESS,
-  Note_DELETE_FAIL,
-  Note_DELETE_REQUEST,
-  Note_DELETE_SUCCESS,
-  Note_UPDATE_FAIL, Note_UPDATE_REQUEST, Note_UPDATE_SUCCESS
-} from '../constants/notesConstants'
-import{USER_UPDATE_SUCCESS} from '../constants/userConstants'
+
+
+import { noteListRequest,noteListSuccess,noteListFailed, deleteNoteRequest, deleteNoteSuccess,
+   deleteNoteFailed ,noteListDeleted} from '../reducers/noteSlice'
+import { createNoteRequest,createNoteSuccess,createNoteFailed, } from '../reducers/noteSlice'
+import { updateNoteRequest,updateNoteSuccess,updateNoteFailed,noteListUpdated } from '../reducers/noteSlice'
 import axios from 'axios'
-export const noteListAction = () => async (dispatch, getstate) => {
-     
-  try {
-    dispatch({ type: USER_UPDATE_SUCCESS, payload: null})
-    dispatch({
-      type: Notes_LOGIN_REQUEST
-    })
-    const {
-      userLogin: { userinfo }
-    } = getstate()
 
-    const config = {
-      headers: {
-        authorization: `Bearer ${userinfo.token}`
+
+
+
+export function listNotes(id) {
+  // fetchTodoByIdThunk is the "thunk function"
+  console.log("notelist is working")
+  return async function listNotes_Thunk(dispatch, getState) {
+   try {
+           dispatch(noteListRequest())
+
+           const {
+            login: { userinfo }
+          } = getState()
+       
+           console.log(userinfo,"doesnt have jwt token")
+          const config = {
+            headers: {
+              authorization: `Bearer ${userinfo[0].token}`
+            }
+          }
+      
+      const { data } = await axios.get(`api/notes/${id}`,config) 
+    
+      if (data) {
+        const { noteList:
+          { notelist } } = getState()
+         
+           let fetchedObject = {
+             data:data,
+             preState:notelist
+           }
+
+        dispatch(noteListSuccess(fetchedObject))
+          
       }
-    }
-
-    const { data } = await axios.get('api/notes/', config)
-    console.log(data, 'NOTEaCTION')
-    dispatch({
-      type: Notes_LOGIN_SUCCESS,
-      payload: data
-    })
-  } catch (error) {
-    dispatch({
-      type: Notes_LOGIN_FAIL,
-      payload: 'fetching notes failed'
-    })
+      
+   } catch (error) {
+       dispatch(noteListFailed(error))
+       console.log(error,"notelist")
+   }
   }
 }
 
+
+//note creation thunk 
+
 export const noteCreateAction = (title, content, category) => async (dispatch, getstate) => {
+  console.log("createnote")
   try {
     console.log(title, content, category, "fic")
-    dispatch({
-      type: Note_CREATE_REQUEST
-    })
+    dispatch(createNoteRequest())
 
-    const { userLogin:
+    const { login:
       { userinfo } } = getstate()
-    console.log(userinfo.token, "useringo")
+    console.log(userinfo[0].token, "useringo")
     const config = {
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${userinfo.token}`
+        authorization: `Bearer ${userinfo[0].token}`
 
       }
     }
-    console.log(userinfo)
 
     const { data } = await axios.post("api/notes/Createnote",
       { title, content, category }, config)
-    console.log(data, 'DATAIS')
+      const { noteList:
+        { notelist } } = getstate()
+      
+     
 
-    console.log(data, 'data')
-
-    dispatch({
-      type: Note_CREATE_SUCCESS,
-      payload: data
-    })
+    dispatch(createNoteSuccess(data))
   } catch (error) {
-    dispatch({
-      type: Note_CREATE_FAIL,
-      payload: 'cant create note'
-    })
+   
+   let data ="Cant Create note...."
+  dispatch(createNoteFailed(error))
+  
   }
 }
 
 
-export const updateNoteAction = (title, content, category, id) => async (
-
-  dispatch,
-  getState
-) => {
- 
-
-  try {
-    
-    dispatch({
-      type: Note_UPDATE_REQUEST,
-      payload:""
-    });
-
-    const {
-      userLogin: { userinfo },
-    } = getState();
-
-    try {
-
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userinfo.token}`,
-        },
-      };
-
-      const { data } = await axios.put(`/api/notes/${id}`,
-        { title, content, category }, config)
-      console.log(data, 'DATAIS')
-      dispatch({
-        type: Note_UPDATE_SUCCESS,
-        payload: data,
-      });
-    } catch (error) {
-      console.log(error, "errro ac.")
-    }
-
-
-  } catch (error) {
-
-    dispatch({
-      type: Note_UPDATE_FAIL,
-      payload: "cant update fail",
-    });
-  }
-}
-
-
-export const noteDeleteAction = (id) => async(dispatch,getstate) => {
+export const noteDeleteAction = (id ,cb) => async(dispatch,getState) => {
+  console.log(id,"delete handler")
      try {
       
-      dispatch({type:Note_DELETE_REQUEST})
-      
+      dispatch(deleteNoteRequest())
       const {
-        userLogin: { userinfo }
-      } = getstate()
+        login: { userinfo }
+      } = getState()
   
       const config = {
         headers: {
           "Content-Type": "application/json",
-          authorization: `Bearer ${userinfo.token}`
+          authorization: `Bearer ${userinfo[0].token}`
         }
       }
-  
-      const data = axios.delete(`api/notes/${id}`,config ).catch((err)=> {
-        console.log(err,"FROM axios delete")})
-         
-        dispatch({type:Note_DELETE_SUCCESS,
-                   payload:data })
-        
+            
+      const data = axios.delete(`api/notes/${id}`,config )
+          console.log(data,'from delete callback')
+          const { noteList:
+            { notelist } } = getState()
+    // fetch updated data after deleted
+         if (data){
+          const { data } = await axios.get('api/notes/', config)
+           console.log(data,"updated dat")
+           dispatch(noteListDeleted({
+             id:id,
+             updatedDate:data
+           }))
+         }
+    
      } catch (error) {
-       dispatch({type:Note_DELETE_FAIL,
-      payload:'cant delete note'})
-     }
+     dispatch(deleteNoteFailed("Cant delete note ..."))
+}
+}
+
+
+export const noteUpdateAction = (title, category, content, noteId ,callback) => async(dispatch,getState) => {
+     console.log(title, category, content, noteId,"update notes")
+     try {
+      
+      dispatch(updateNoteRequest())
+      const {
+        login: { userinfo }
+      } = getState()
+  
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${userinfo[0].token}`
+        }
+      }
+      let url = `api/notes/${noteId}`
+          const { data } = await axios.put(url,
+      { title, content, category }, config)
+       
+       if (data) {
+        //update notelist to display updated notes
+          dispatch(noteListUpdated(data))
+         
+       }
+      dispatch(updateNoteSuccess(data))
+       
+          
+    
+     } catch (error) {
+     dispatch(updateNoteFailed("Cant delete note ..."))
+}
 }

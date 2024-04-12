@@ -2,15 +2,15 @@ import React from 'react'
 import {Nav,NavDropdown , Navbar , Form , Container , Button , }  from 'react-bootstrap' 
 import { useDispatch,useSelector } from 'react-redux';
 import { Link ,useNavigate  } from 'react-router-dom';
-import { logout } from '../../actions/userActions';
+import { singOut } from '../../actions/userAction';
 function Header({setsearch}) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const userLogin = useSelector((state)=> state.userLogin)
+  const userLogin = useSelector((state)=> state.login)
   const {userinfo} = userLogin
   const logoutHandler = () => {
-              dispatch(logout())
+              dispatch(singOut())
               navigate('/')
   }
   return (
@@ -18,7 +18,7 @@ function Header({setsearch}) {
     <Navbar bg="primary" expand="lg"  >
     <Container fluid className='d-flex' >
       <Navbar.Brand >
-        <Link to={'/'}>NotZipper</Link> </Navbar.Brand>
+        <Link  to={'/mynote'}>NotZipper</Link> </Navbar.Brand>
       <Navbar.Toggle aria-controls="navbarScroll" />
       <Navbar.Collapse id="navbarScroll">
       <Form className="d-flex ml-auto">
@@ -42,7 +42,7 @@ function Header({setsearch}) {
           <NavDropdown title="My Profile" id="navbarScrollingDropdown"
            style={{alignItems:'center',}}>
           <NavDropdown.Item  >
-          <Nav.Link as={Link} to='/profile'>profile</Nav.Link>
+          <Nav.Link as={Link} to='/'>profile</Nav.Link>
 
           </NavDropdown.Item>
 

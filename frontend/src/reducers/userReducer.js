@@ -6,7 +6,8 @@ export const userLoginReducer = (state = {}, Action) => {
             return { loading: true };
 
         case USER_LOGIN_SUCCESS: 
-            return { loading: true, userinfo: Action.payload };
+        console.log(state,"userstate")
+            return { loading: true, userinfo: Action.payload, };
 
         case USER_LOGIN_FAIL:
             return { loading: false, error: Action.payload };

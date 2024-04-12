@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import Loading from '../../components/Loading'
 import ErrorMessage from '../../components/ErrorMessage'
 import { useState } from 'react'
-import  ReactMarkdown from 'react-markdown'
+import Markdown from 'react-markdown'
 import { useDispatch, useSelector } from 'react-redux'
 import './Createnote.css'
 import { noteCreate, noteCreateAction } from '../../actions/noteAction'
@@ -15,8 +15,8 @@ function Createnote() {
   
    const navigate = useNavigate()
    const dispatch = useDispatch()
-   const noteCreation = useSelector(state => state.noteCreate)  
-   const {loading,notes,error} = noteCreation
+   const noteCreation = useSelector(state => state.createNote)  
+   const {loading,notelist,error} = noteCreation
 
    const submitHandler = (e) => {
      e.preventDefault()
@@ -34,6 +34,7 @@ function Createnote() {
    
   return (
      <div>
+      
       <h1 className='heading'>Create Note</h1>
     <Card>
             <Card.Header>Create a note</Card.Header>
@@ -68,7 +69,7 @@ function Createnote() {
      <Card>
       <Card.Header> Note Preview</Card.Header>
       <Card.Body>
-        <ReactMarkdown>{content}</ReactMarkdown>
+        <Markdown>{content}</Markdown>
       </Card.Body>
      </Card>
    )}
