@@ -43,6 +43,7 @@ function LoginScreen() {
   return (
      <Mainscreen title={'Login'}>
         <div className='loginContainer'>
+       
           {loading && <Loading/>}
           {loginError && <ErrorMessage >{loginError}</ErrorMessage>}
           <Form onSubmit={submitHandler}>
@@ -55,6 +56,7 @@ function LoginScreen() {
 
         <Form.Text className="text-muted">
           We'll never share your email with anyone else.
+          
         </Form.Text>
       </Form.Group>
 
@@ -74,11 +76,13 @@ function LoginScreen() {
     </Form>
     <Row className='py-3'>
          <Col>
-         New Customer ? <Link to={'/register'}> register here</Link>
+         New Customer ? <Link to={'/register'}> register here</Link> 
+         
          </Col>
     </Row>
     </div>
      </Mainscreen>
+     
 
   )
 }

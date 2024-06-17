@@ -14,10 +14,11 @@ export function userLogin(email,password) {
             }
           }
       
-          const { data } = await axios.post("api/user/login",
+          const { data } = await axios.post("http://notezipper.top/api/user/login",
             { email, password }, config)
           console.log(data, 'DATAIS')
             if (data)  {
+              
                 dispatch(loginSuccess(data))
             }
       
@@ -43,7 +44,7 @@ export function registerUser( name, picMessage, email, password) {
       
           }
       
-          const { data } = await axios.post('/api/user/',
+          const { data } = await axios.post('http://notezipper.top/api/user/',
             { name, picMessage, email, password }, config)
              dispatch(registerSuccess(data))
              

@@ -14,7 +14,7 @@ function Mainscreen({title,children}) {
                     </> 
                   )}
                  {children}
-
+      
                 </div>
             </Row>
         </Container>
