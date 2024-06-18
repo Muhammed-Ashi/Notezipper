@@ -27,7 +27,7 @@ export function listNotes(id) {
             }
           }
       
-      const { data } = await axios.get(`http://notezipper.top/api/notes/${id}`,config) 
+      const { data } = await axios.get(`https://notezipper.top/api/notes/${id}`,config) 
     
       if (data) {
         const { noteList:
@@ -69,7 +69,7 @@ export const noteCreateAction = (title, content, category) => async (dispatch, g
       }
     }
 
-    const { data } = await axios.post("http://notezipper.top/api/notes/Createnote",
+    const { data } = await axios.post("https://notezipper.top/api/notes/Createnote",
       { title, content, category }, config)
       const { noteList:
         { notelist } } = getstate()
@@ -102,7 +102,7 @@ export const noteDeleteAction = (id ,cb) => async(dispatch,getState) => {
         }
       }
             
-      const data = axios.delete(`http://notezipper.top/api/notes/${id}`,config )
+      const data = axios.delete(`https://notezipper.top/api/notes/${id}`,config )
           console.log(data,'from delete callback')
           const { noteList:
             { notelist } } = getState()
@@ -137,7 +137,7 @@ export const noteUpdateAction = (title, category, content, noteId ,callback) => 
           authorization: `Bearer ${userinfo[0].token}`
         }
       }
-      let url = `http://notezipper.top/api/notes/${noteId}`
+      let url = `https://notezipper.top/api/notes/${noteId}`
           const { data } = await axios.put(url,
       { title, content, category }, config)
        
